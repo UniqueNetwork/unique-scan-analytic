@@ -8,7 +8,7 @@ import { AppConfigService } from '../utils/app-config.service';
 import { UtilsService } from '../utils/utils.service';
 import { AccountsStats } from '../../common/entities/AccountsStats';
 
-interface ICollectionResponse {
+interface IAccountsResponse {
   data: {
     accountsStatistics: {
       data: {
@@ -29,7 +29,7 @@ export class AccountsService {
   ) {}
 
   @Cron('25 * * * *')
-  async collectionCron() {
+  async accountsCron() {
     const chains = this.appConfigService.CHAINS;
     for (const { url, name } of chains) {
       try {
@@ -41,7 +41,7 @@ export class AccountsService {
   }
 
   private async stats(url: string, chainName: string) {
-    const lastCollection = await this.repo.findOne({
+    const lastItem = await this.repo.findOne({
       where: {
         chain: chainName,
       },
@@ -50,11 +50,11 @@ export class AccountsService {
       },
     });
 
-    const result = await GqlService.makeRequest<ICollectionResponse>(
+    const result = await GqlService.makeRequest<IAccountsResponse>(
       url,
       getAccountsStats,
       {
-        fromDate: this.utils.formatTimestampToDate(lastCollection?.timestamp),
+        fromDate: this.utils.formatTimestampToDate(lastItem?.timestamp),
       },
     );
 

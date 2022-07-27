@@ -3,7 +3,6 @@ import path = require('path');
 import { DataSourceOptions } from 'typeorm';
 import { AccountsStats } from './entities/AccountsStats';
 import { TokensStats } from './entities/TokensStats';
-import { ExtrinsicsStats } from './entities/ExtrinsicsStats';
 import { TransfersStats } from './entities/TransfersStats';
 import { CollectionsStats } from './entities/CollectionsStats';
 
@@ -17,13 +16,7 @@ const typeormConfig: DataSourceOptions = {
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [
-    AccountsStats,
-    TokensStats,
-    ExtrinsicsStats,
-    TransfersStats,
-    CollectionsStats,
-  ],
+  entities: [AccountsStats, TokensStats, TransfersStats, CollectionsStats],
   synchronize: true,
   migrationsRun: false,
   migrations: [path.join(migrationsDir, '/**/*{.ts,.js}')],

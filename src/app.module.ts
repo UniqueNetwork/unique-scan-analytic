@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AccountsStats } from '../common/entities/AccountsStats';
 import { TokensStats } from '../common/entities/TokensStats';
-import { ExtrinsicsStats } from '../common/entities/ExtrinsicsStats';
 import { TransfersStats } from '../common/entities/TransfersStats';
 import typeormConfig from '../common/typeorm.config';
 import { TokenModule } from './tokens/token.module';
@@ -23,7 +22,6 @@ import { AccountsModule } from './accounts/accounts.module';
       entities: [
         AccountsStats,
         TokensStats,
-        ExtrinsicsStats,
         TransfersStats,
         CollectionsStats,
         TransfersStats,

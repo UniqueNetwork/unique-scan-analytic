@@ -41,7 +41,7 @@ export class CollectionsService {
   }
 
   private async stats(url: string, chainName: string) {
-    const lastCollection = await this.repo.findOne({
+    const lastItem = await this.repo.findOne({
       where: {
         chain: chainName,
       },
@@ -54,7 +54,7 @@ export class CollectionsService {
       url,
       getCollectionsStats,
       {
-        fromDate: this.utils.formatTimestampToDate(lastCollection?.timestamp),
+        fromDate: this.utils.formatTimestampToDate(lastItem?.timestamp),
       },
     );
 

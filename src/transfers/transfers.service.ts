@@ -74,7 +74,7 @@ export class TransfersService {
     chainName: string,
     type?: ExtrinsicsStatsTypeEnum,
   ) {
-    const lastToken = await this.repo.findOne({
+    const lastItem = await this.repo.findOne({
       where: {
         chain: chainName,
         type,
@@ -88,7 +88,7 @@ export class TransfersService {
       url,
       getExtrinsicsStat,
       {
-        fromDate: this.utils.formatTimestampToDate(lastToken?.timestamp),
+        fromDate: this.utils.formatTimestampToDate(lastItem?.timestamp),
         type,
       },
     );
