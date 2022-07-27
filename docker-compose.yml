@@ -1,0 +1,46 @@
+version: "3"
+
+networks:
+ scan-api:
+   external: false
+
+services:
+  scan-stats-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: scan-stats-api
+    ports:
+      - "3005:3005"
+    networks:
+      - scan-api
+    depends_on:
+      - postgres
+    restart: on-failure
+    environment:
+      - PORT=3005
+      - POSTGRES_USER=polkastats
+      - POSTGRES_PASSWORD=polkastats
+      - POSTGRES_DATABASE=polkastats
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+
+  postgres:
+    image: postgres:14.2-alpine
+    container_name: scan-stats-database
+    networks:
+      - scan-api
+    env_file:
+      - .env
+    environment:
+      - TZ=Europe/Moscow
+      - PGTZ=Europe/Moscow
+    ports:
+      - "5432:5432"
+    volumes:
+      - scan-pgdata:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  scan-pgdata:
+    external: false
