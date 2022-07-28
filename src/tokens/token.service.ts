@@ -21,7 +21,7 @@ interface ITokensResponse {
 
 @Injectable()
 export class TokenService {
-  private readonly logger = new Logger('CollectionsService');
+  private readonly logger = new Logger('TokenService');
 
   constructor(
     @InjectRepository(TokensStats) private repo: Repository<TokensStats>,
