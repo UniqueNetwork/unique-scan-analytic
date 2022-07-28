@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { CHAIN_NAMES } from '../../common/constants';
 
 @Injectable()
 export class AppConfigService {
@@ -24,12 +25,12 @@ export class AppConfigService {
 
   get CHAINS() {
     return [
-      { name: 'OPAL', url: this.OPAL_CHAIN_GQL_API },
+      { name: CHAIN_NAMES.OPAL, url: this.OPAL_CHAIN_GQL_API },
       {
-        name: 'UNIQUE',
+        name: CHAIN_NAMES.UNIQUE,
         url: this.UNIQUE_CHAIN_GQL_API,
       },
-      { name: 'QUARTZ', url: this.QUARTZ_CHAIN_GQL_API },
+      { name: CHAIN_NAMES.QUARTZ, url: this.QUARTZ_CHAIN_GQL_API },
     ].filter(({ url }) => url);
   }
 }

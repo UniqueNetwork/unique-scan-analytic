@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cron } from '@nestjs/schedule';
@@ -21,6 +21,8 @@ interface IAccountsResponse {
 
 @Injectable()
 export class AccountsService {
+  private readonly logger = new Logger('AccountsService');
+
   constructor(
     @InjectRepository(AccountsStats)
     private repo: Repository<AccountsStats>,
@@ -35,7 +37,7 @@ export class AccountsService {
       try {
         await this.stats(url, name);
       } catch (e) {
-        continue;
+        this.logger.error({ message: e.message });
       }
     }
   }

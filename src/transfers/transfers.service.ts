@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Cron } from '@nestjs/schedule';
@@ -27,6 +27,8 @@ interface ITransferResponse {
 
 @Injectable()
 export class TransfersService {
+  private readonly logger = new Logger('TransfersService');
+
   constructor(
     @InjectRepository(TransfersStats) private repo: Repository<TransfersStats>,
     private readonly appConfigService: AppConfigService,
@@ -35,36 +37,26 @@ export class TransfersService {
 
   @Cron('10 * * * *')
   async transactionsCron() {
-    const chains = this.appConfigService.CHAINS;
-    for (const { url, name } of chains) {
-      try {
-        await this.stats(url, name);
-      } catch {
-        continue;
-      }
-    }
+    await this.runCron();
   }
 
   @Cron('15 * * * *')
   async coinsTransferCron() {
-    const chains = this.appConfigService.CHAINS;
-    for (const { url, name } of chains) {
-      try {
-        await this.stats(url, name, ExtrinsicsStatsTypeEnum.COINS);
-      } catch {
-        continue;
-      }
-    }
+    await this.runCron(ExtrinsicsStatsTypeEnum.COINS);
   }
 
   @Cron('20 * * * *')
   async tokensTransferCron() {
+    await this.runCron(ExtrinsicsStatsTypeEnum.TOKENS);
+  }
+
+  private async runCron(type?: ExtrinsicsStatsTypeEnum) {
     const chains = this.appConfigService.CHAINS;
     for (const { url, name } of chains) {
       try {
-        await this.stats(url, name, ExtrinsicsStatsTypeEnum.TOKENS);
-      } catch {
-        continue;
+        await this.stats(url, name, type);
+      } catch (e) {
+        this.logger.error({ message: e.message });
       }
     }
   }
