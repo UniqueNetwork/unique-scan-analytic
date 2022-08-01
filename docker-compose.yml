@@ -5,11 +5,11 @@ networks:
     external: false
 
 services:
-  scan-stats-api:
+  scan-stats-backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: scan-stats-api
+    container_name: scan-stats-backend
     ports:
       - "${PORT}:${PORT}"
     networks:
