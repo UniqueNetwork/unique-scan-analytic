@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { Logger } from '@nestjs/common'
 
 interface IGQLErrors {
   errors: {
@@ -12,6 +13,8 @@ interface IParams {
   type?: string;
 }
 
+const logger = new Logger('GqlService');
+
 export class GqlService {
   private static readonly axios = axios.create({ timeout: 30 * 1000 });
 
@@ -24,6 +27,13 @@ export class GqlService {
       const response = await this.axios.post<T>(gqlUrl, {
         query,
         variables,
+      });
+
+      logger.log({
+        gqlUrl,
+        query,
+        variables,
+        response: response.data,
       });
 
       if ((response.data as unknown as IGQLErrors).errors) {
