@@ -1,40 +1,35 @@
-version: "3"
+version: "3.7"
 
 networks:
- scan-api:
-   external: false
+  scan-backend:
+    external: false
 
 services:
-  scan-stats-api:
+  scan-stats-backend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: scan-stats-api
+    container_name: scan-stats-backend
     ports:
       - "${PORT}:${PORT}"
     networks:
-      - scan-api
+      - scan-backend
     depends_on:
       - postgres
     restart: on-failure
-    environment:
-      - PORT=${PORT}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
+    env_file:
+      - ./.env
 
   postgres:
     image: postgres:14.2-alpine
     container_name: scan-stats-database
     networks:
-      - scan-api
+      - scan-backend
     env_file:
-      - .env
+      - ./.env
     environment:
-      - TZ=Europe/Moscow
-      - PGTZ=Europe/Moscow
+      TZ: Europe/Moscow
+      PGTZ: Europe/Moscow
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
